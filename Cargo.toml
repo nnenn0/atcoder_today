@@ -1,0 +1,9 @@
+[package]
+name = "atcoder_today"
+version = "0.1.0"
+authors = ["nnenn0 <nnenn0memo@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
