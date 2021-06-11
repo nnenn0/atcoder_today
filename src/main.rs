@@ -8,6 +8,22 @@ use clap::Clap;
     about = "Make a suggestion for today's contest"
 )]
 
+struct Opts {
+    #[clap(short, long)]
+    reset: bool,
+
+    #[clap(short, long)]
+    latest: Option<u32>,
+
+    #[clap(short, long)]
+    from_no: Option<u32>,
+
+    #[clap(short, long)]
+    to_no: Option<u32>,
+}
+
 fn main() {
-    println!("Hello, world!");
+    let opts = Opts::parse();
+
+    
 }
