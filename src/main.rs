@@ -1,4 +1,9 @@
 use clap::Clap;
+use serde::{Serialize, Deserialize};
+use std::fs::File;
+use std::io::Write;
+use std::path::Path;
+use std::io::{BufReader, BufWriter};
 
 #[derive(Clap, Debug)]
 #[clap(
@@ -22,8 +27,31 @@ struct Opts {
     to_no: Option<u32>,
 }
 
-fn main() {
-    let opts = Opts::parse();
+#[derive(Serialize, Deserialize)]
+struct Setting {
+    latest: u32,
+    done_contests: Vec<u32>,
+}
 
-    
+fn main() {
+    let setting_json = "setting.json";
+    let opts = Opts::parse();
+    if !Path::new(setting_json).exists() {
+        match opts.latest {
+            Some(latest) => {
+                let setting = Setting {
+                    latest: latest,
+                    done_contests: vec![],
+                };
+                let file = File::create(setting_json).unwrap();
+                let mut writer = BufWriter::new(file);
+                writer.write(serde_json::to_string(&setting).unwrap().as_bytes()).unwrap();
+                println!("new setting.json!");
+            },
+            None => panic!("please set latest contests(-l)")
+        }
+    }
+    let file = File::open(setting_json).unwrap();
+    let reader = BufReader::new(file);
+    let setting: Setting = serde_json::from_reader(reader).unwrap();
 }
