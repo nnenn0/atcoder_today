@@ -1,6 +1,7 @@
 use clap::Clap;
 use serde::{Serialize, Deserialize};
 use std::fs::File;
+use std::fs::remove_file;
 use std::io::Write;
 use std::path::Path;
 use std::io::{BufReader, BufWriter};
@@ -36,6 +37,12 @@ struct Setting {
 fn main() {
     let setting_json = "setting.json";
     let opts = Opts::parse();
+    if opts.reset {
+        if Path::exists(Path::new(setting_json)) {
+            remove_file(setting_json).unwrap();
+        }
+        println!("setting.json is deleted!!");
+    }
     if !Path::new(setting_json).exists() {
         match opts.latest {
             Some(latest) => {
