@@ -1,11 +1,13 @@
 use clap::Clap;
 use rand::Rng;
 use serde::{Serialize, Deserialize};
+use url::Url;
 use std::fs::File;
 use std::fs::remove_file;
 use std::io::Write;
 use std::path::Path;
 use std::io::{BufReader, BufWriter};
+use url_open::UrlOpen;
 
 #[derive(Clap, Debug)]
 #[clap(
@@ -78,6 +80,10 @@ fn main() {
             writer.write(serde_json::to_string(&setting).unwrap().as_bytes()).unwrap();
             println!("{:?}", setting);
             println!("update setting.json!");
+            let abc_url = "https://atcoder.jp/contests/abc";
+            let abc_tasks = "/tasks";
+            let url = format!("{}{}{}", abc_url, today_contest, abc_tasks);
+            Url::parse(&url).unwrap().open();
             break;
         }
     }
