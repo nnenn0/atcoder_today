@@ -82,7 +82,7 @@ fn main() {
             println!("update setting.json!");
             let abc_url = "https://atcoder.jp/contests/abc";
             let abc_tasks = "/tasks";
-            let url = format!("{}{}{}", abc_url, today_contest, abc_tasks);
+            let url = format!("{}{:>03}{}", abc_url, today_contest, abc_tasks);
             Url::parse(&url).unwrap().open();
             break;
         }
