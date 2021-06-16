@@ -1,4 +1,5 @@
 use clap::Clap;
+use rand::Rng;
 use serde::{Serialize, Deserialize};
 use std::fs::File;
 use std::fs::remove_file;
@@ -28,7 +29,7 @@ struct Opts {
     to_no: Option<u32>,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 struct Setting {
     latest: u32,
     done_contests: Vec<u32>,
@@ -59,6 +60,25 @@ fn main() {
         }
     }
     let file = File::open(setting_json).unwrap();
-    let reader = BufReader::new(file);
-    let setting: Setting = serde_json::from_reader(reader).unwrap();
+    let reader = BufReader::new(&file);
+    let mut setting: Setting = serde_json::from_reader(reader).unwrap();
+    let latest = &setting.latest;
+    let done_contests = &setting.done_contests;
+    loop {
+        let today_contest = rand::thread_rng().gen_range(1..=*latest);
+        if done_contests.contains(&today_contest) {
+            continue;
+        }
+        else {
+            println!("{}", today_contest);
+            setting.done_contests.push(today_contest);
+            setting.done_contests.sort();
+            let file = File::create(setting_json).unwrap();
+            let mut writer = BufWriter::new(&file);
+            writer.write(serde_json::to_string(&setting).unwrap().as_bytes()).unwrap();
+            println!("{:?}", setting);
+            println!("update setting.json!");
+            break;
+        }
+    }
 }
